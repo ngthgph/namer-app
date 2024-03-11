@@ -11,7 +11,7 @@ class FavoritesPage extends StatelessWidget {
       return Center(
         child: Text('No favorites yet.'),
       );
-    }
+    }    
 
     return ListView(
       children: [
@@ -20,9 +20,14 @@ class FavoritesPage extends StatelessWidget {
           child: Text('You have '
               '${appState.favorites.length} favorites:'),
         ),
-        for (var pair in appState.favorites)
+        for (var pair in appState.favorites) 
           ListTile(
-            leading: Icon(Icons.favorite),
+            leading: IconButton(
+                onPressed: () {
+                  appState.toggleFavorite(pair);
+                },
+                icon: Icon(Icons.favorite_border),
+              ),
             title: Text(pair.asPascalCase),
           ),
       ],

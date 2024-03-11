@@ -35,7 +35,7 @@ class MyAppState extends ChangeNotifier {
   MyAppState() {
     getFavoritesPreference();
   }
-  
+
   var current = WordPair.random();
 
   void getNext() {
@@ -52,13 +52,13 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
-      PreferencesManager.removeFavorite(current.asCamelCase);
+  void toggleFavorite(pair) {
+    if (favorites.contains(pair)) {
+      favorites.remove(pair);
+      PreferencesManager.removeFavorite(pair.asCamelCase);
     } else {
-      favorites.add(current);
-      PreferencesManager.saveFavorite(current.asCamelCase);
+      favorites.add(pair);
+      PreferencesManager.saveFavorite(pair.asCamelCase);
     }
     notifyListeners();
   }

@@ -51,7 +51,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
             children: [
               ElevatedButton.icon(
                 onPressed: () {
-                  appState.toggleFavorite();
+                  appState.toggleFavorite(pair);
                 },
                 icon: Icon(icon),
                 label: Text('Like'),
