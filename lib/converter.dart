@@ -1,6 +1,6 @@
 import 'package:english_words/english_words.dart';
 
-class Helper {
+class StringToPairConverter {
 
   static List<WordPair> convertToWordPairList(List<String> stringList) {
 

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'favorites_page.dart';
 import 'generator_page.dart';
-import 'helper.dart';
+import 'converter.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,6 +31,11 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
+
+  MyAppState() {
+    getFavoritesPreference();
+  }
+  
   var current = WordPair.random();
 
   void getNext() {
@@ -40,8 +45,11 @@ class MyAppState extends ChangeNotifier {
 
   var favorites = <WordPair>[];
 
-  MyAppState() {
-    favorites = Helper.convertToWordPairList(PreferencesManager.getFavoritesPreference());
+  // Get the favoritesPreference
+  void getFavoritesPreference() async {
+    var tempList = await PreferencesManager.getFavoritesList();
+    favorites = StringToPairConverter.convertToWordPairList(tempList);
+    notifyListeners();
   }
 
   void toggleFavorite() {
