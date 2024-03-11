@@ -1,30 +1,35 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesManager {
-  static List<String> favoritesPreference = List.empty();
+  static Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  static List<String> _favoritesPreference = List.empty();
 
-  static void saveFavorite(String favorite) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> favorites = prefs.getStringList('favorites') ?? [];
+  static saveFavorite(String favorite) async {
+    final SharedPreferences prefs = await _prefs;
+    final List<String> favorites = prefs.getStringList('favorites') ?? [];
     favorites.add(favorite);
     await prefs.setStringList('favorites', favorites);
 
-    favoritesPreference = favorites;
+    _favoritesPreference = favorites;
   }
 
   static void removeFavorite(String favorite) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> favorites = prefs.getStringList('favorites') ?? [];
+    final SharedPreferences prefs = await _prefs;
+    final List<String> favorites = prefs.getStringList('favorites') ?? [];
     favorites.remove(favorite);
     await prefs.setStringList('favorites', favorites);
 
-    favoritesPreference = favorites;
+    _favoritesPreference = favorites;
   }
 
-  static void getFavorites() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> favorites = prefs.getStringList('favorites') ?? [];
+  static void getFavoritesList() async {
+    final SharedPreferences prefs = await _prefs;
+    final List<String> favorites = prefs.getStringList('favorites') ?? [];
 
-    favoritesPreference = favorites;
+    _favoritesPreference = favorites;
+  }
+
+  static List<String> getFavoritesPreference() {
+    return _favoritesPreference;
   }
 }
