@@ -1,7 +1,7 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:namer_app/preferences_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'favorites_page.dart';
 import 'generator_page.dart';
@@ -39,11 +39,18 @@ class MyAppState extends ChangeNotifier {
 
   var favorites = <WordPair>[];
 
+  MyAppState() {
+    PreferencesManager.getFavorites();
+    favorites = Helper.convertToWordPairList(PreferencesManager.favoritesPreference);
+  }
+
   void toggleFavorite() {
     if (favorites.contains(current)) {
       favorites.remove(current);
+      PreferencesManager.removeFavorite(current.asCamelCase);
     } else {
       favorites.add(current);
+      PreferencesManager.saveFavorite(current.asCamelCase);
     }
     notifyListeners();
   }
@@ -101,5 +108,29 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+}
+
+class Helper {
+
+  static List<WordPair> convertToWordPairList(List<String> stringList) {
+
+    var pairs = <WordPair>[];
+
+    for(var string in stringList) {
+      var first = getSubstringsByUpperCase(string).first;
+      var last = getSubstringsByUpperCase(string).last;
+      pairs.add(WordPair(first, last));
+    }
+    return pairs;
+  }
+
+  static List<String> getSubstringsByUpperCase(String str) {
+    int upperCaseIndex =
+        str.split('').indexWhere((char) => char == char.toUpperCase());
+
+    String firstSubstring = str.substring(0, upperCaseIndex);
+    String secondSubstring = str.substring(upperCaseIndex).toLowerCase();
+    return [firstSubstring, secondSubstring];
   }
 }
