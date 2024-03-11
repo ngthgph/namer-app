@@ -166,7 +166,7 @@ class BigCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Text(
-          pair.asLowerCase,
+          pair.asPascalCase,
           style: style,
           semanticsLabel: pair.asPascalCase,
         ),
@@ -196,7 +196,7 @@ class FavoritesPage extends StatelessWidget {
         for (var pair in appState.favorites)
           ListTile(
             leading: Icon(Icons.favorite),
-            title: Text(pair.asLowerCase),
+            title: Text(pair.asPascalCase),
           ),
       ],
     );
