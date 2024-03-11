@@ -59,10 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (selectedIndex) {
       case 0:
         page = GeneratorPage();
-        break;
       case 1:
         page = FavoritesPage();
-        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -102,11 +100,36 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class GeneratorPage extends StatelessWidget {
+class GeneratorPage extends StatefulWidget {
+  @override
+  State<GeneratorPage> createState() => _GeneratorPageState();
+}
+
+class _GeneratorPageState extends State<GeneratorPage> {
+  var styleSelected = 0;
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
+
+    String styledPair;
+    String styleTitle;
+    switch(styleSelected) {
+      case 0: 
+        styledPair = pair.asLowerCase;
+        styleTitle = 'camelCase';
+      case 1: 
+        styledPair = pair.asCamelCase;
+        styleTitle = 'PascalCase';
+      case 2: 
+        styledPair = pair.asPascalCase;
+        styleTitle = 'UPPERCASE';
+      case 3: 
+        styledPair = pair.asUpperCase;
+        styleTitle = 'lowercase';
+      default:
+        throw UnimplementedError('no String for $styleSelected');
+    }
 
     IconData icon;
     if (appState.favorites.contains(pair)) {
@@ -119,7 +142,7 @@ class GeneratorPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          BigCard(pair: pair),
+          BigCard(pair: styledPair),
           SizedBox(height: 10),
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -130,6 +153,19 @@ class GeneratorPage extends StatelessWidget {
                 },
                 icon: Icon(icon),
                 label: Text('Like'),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    if(styleSelected == 3) {
+                    styleSelected = 0;
+                  } else {
+                    styleSelected++;
+                  }
+                  });
+                },
+                child: Text(styleTitle),
               ),
               SizedBox(width: 10),
               ElevatedButton(
@@ -152,7 +188,7 @@ class BigCard extends StatelessWidget {
     required this.pair,
   });
 
-  final WordPair pair;
+  final String pair;
 
   @override
   Widget build(BuildContext context) {
@@ -166,9 +202,9 @@ class BigCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Text(
-          pair.asPascalCase,
+          pair,
           style: style,
-          semanticsLabel: pair.asPascalCase,
+          semanticsLabel: pair,
         ),
       ),
     );
@@ -196,7 +232,7 @@ class FavoritesPage extends StatelessWidget {
         for (var pair in appState.favorites)
           ListTile(
             leading: Icon(Icons.favorite),
-            title: Text(pair.asPascalCase),
+            title: Text(pair.asLowerCase),
           ),
       ],
     );
