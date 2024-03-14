@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/main.dart';
 import 'package:provider/provider.dart';
+
+import '../../app_state.dart';
+import 'local_widgets/generator_button.dart';
+import 'local_widgets/other_widget.dart';
 
 class GeneratorPage extends StatefulWidget {
   @override
@@ -16,17 +19,17 @@ class _GeneratorPageState extends State<GeneratorPage> {
 
     String styledPair;
     String styleTitle;
-    switch(styleSelected) {
-      case 0: 
+    switch (styleSelected) {
+      case 0:
         styledPair = pair.asLowerCase;
         styleTitle = 'camelCase';
-      case 1: 
+      case 1:
         styledPair = pair.asCamelCase;
         styleTitle = 'PascalCase';
-      case 2: 
+      case 2:
         styledPair = pair.asPascalCase;
         styleTitle = 'UPPERCASE';
-      case 3: 
+      case 3:
         styledPair = pair.asUpperCase;
         styleTitle = 'lowercase';
       default:
@@ -40,6 +43,16 @@ class _GeneratorPageState extends State<GeneratorPage> {
       icon = Icons.favorite_border;
     }
 
+    void onStyleChanging(styleSelected) {
+      setState(() {
+        if (styleSelected == 3) {
+          styleSelected = 0;
+        } else {
+          styleSelected++;
+        }
+      });
+    }
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -49,23 +62,11 @@ class _GeneratorPageState extends State<GeneratorPage> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite(pair);
-                },
-                icon: Icon(icon),
-                label: Text('Like'),
-              ),
+              FavoriteButton(appState: appState, pair: pair, icon: icon),
               SizedBox(width: 10),
               ElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    if(styleSelected == 3) {
-                    styleSelected = 0;
-                  } else {
-                    styleSelected++;
-                  }
-                  });
+                  onStyleChanging(styleSelected);
                 },
                 child: Text(styleTitle),
               ),
@@ -79,35 +80,6 @@ class _GeneratorPageState extends State<GeneratorPage> {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class BigCard extends StatelessWidget {
-  const BigCard({
-    super.key,
-    required this.pair,
-  });
-
-  final String pair;
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    var style = theme.textTheme.displayMedium!.copyWith(
-      color: theme.colorScheme.onPrimary,
-    );
-
-    return Card(
-      color: theme.colorScheme.primary,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Text(
-          pair,
-          style: style,
-          semanticsLabel: pair,
-        ),
       ),
     );
   }
